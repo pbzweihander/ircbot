@@ -47,21 +47,22 @@ def main():
 		print(text)
 
 		if "PRIVMSG" in text:
-			chan = "#" + text.split("#")[1].split()[0]
-			if chan in joined_channels:
-				if flag in text:
-					msg = text.split(flag)[1]
-					args = msg.split()
-					func = commands.get(args[0])
-					if func:
-						arr = func(chan, args)
-						if arr:
-							if type(arr) is list or type(arr) is tuple:
-								for m in arr:
-									if m:
-										irc.send(chan, m)
-							else:
-								irc.send(chan, m)
+			chan = text.split("PRIVMSG ")[1].split()[0]
+			if "#" not in chan:
+				chan = text.split("!")[0][1:]
+			if flag in text:
+				msg = text.split(flag)[1]
+				args = msg.split()
+				func = commands.get(args[0])
+				if func:
+					arr = func(chan, args)
+					if arr:
+						if type(arr) is list or type(arr) is tuple:
+							for m in arr:
+								if m:
+									irc.send(chan, m)
+						else:
+							irc.send(chan, m)
 
 def quit(chan, args):
 	irc.disconnect()
