@@ -6,10 +6,10 @@ pbzweihander의 IRC 봇
 
 ### Features
 
-'''console
+```console
 # 음악 추천 기능
 \music
-'''
+```
 
 --------
 
