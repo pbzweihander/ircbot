@@ -13,5 +13,5 @@ pbzweihander의 IRC 봇
 
 --------
 
-[GNU GPL 3.0 License](LICENSE.md)
+[GNU AGPL 3.0 License](LICENSE.md)
 
