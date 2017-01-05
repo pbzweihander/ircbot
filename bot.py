@@ -27,14 +27,20 @@ nickname = "zweihander-bot"
 
 flag = "\\"
 
-irc = IRC()
-irc.connect(server, port, channel, nickname)
-
 joined_channels = [channel]
 commands = {}
 playlist = []
 
 def main():
+	while True:
+		try:
+			irc = IRC()
+			irc.connect(server, port, channel, nickname)
+		except:
+			print("retrying connection..")
+			time.sleep(1)
+		break
+
 	commands.update({"quit": quit})
 	commands.update({"reloadplist": getPlaylist})
 	commands.update({"music": chooseMusic})
@@ -50,7 +56,8 @@ def main():
 			chan = text.split("PRIVMSG ")[1].split()[0]
 			if "#" not in chan:
 				chan = text.split("!")[0][1:]
-			if flag in text:
+			print(text.split(":")[2])
+			if text.split(":")[2][0] == flag:
 				msg = text.split(flag)[1]
 				args = msg.split()
 				if len(args) > 0:
