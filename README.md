@@ -14,13 +14,6 @@ Getting Started
 
 ### prerequisites
 - Python ≥ *3.5*
-<!--
-### Instruction
-```bash
-# 봇 실행
-python3 bot.py
-```
--->
 
 ### Installation
 ```bash
