@@ -1,14 +1,14 @@
 # Name: irc.py
 # Author: pbzweihander
 # Email: sd852456@naver.com
-# 
+#
 # Copyright (C) 2016-2017 pbzweihander
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -21,7 +21,7 @@ class IRC:
 	def __init__(self):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.irc = ssl.wrap_socket(sock)
-	
+
 	def send(self, chan, msg):
 		self.irc.send(bytes("PRIVMSG " + chan + " :" + msg + "\r\n", "UTF-8"))
 
@@ -33,7 +33,7 @@ class IRC:
 		self.rawsend("USER " + botnick + " 0 * :zweihander-bot\r\n")
 		self.rawsend("NICK " + botnick + "\r\n")
 		self.rawsend("JOIN " + channel + "\r\n")
-	
+
 	def disconnect(self):
 		self.rawsend("QUIT :bye!")
 
