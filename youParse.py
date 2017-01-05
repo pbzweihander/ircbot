@@ -7,13 +7,13 @@
 # Agreement: You can use, modify, or redistribute this tool under
 # the terms of GNU General Public License (GPLv3).
 # This tool is for educational purposes only. Any damage you make will not affect the author.
- 
+
 import re
 import urllib.request
 import urllib.error
 import sys
 import time
- 
+
 def crawl(url):
 	sTUBE = ''
 	cPL = ''
@@ -46,7 +46,7 @@ def crawl(url):
 		return all_url
 	else:
 		return
-    
+
 if __name__ == "__main__":
 	if len(sys.argv) < 2 or len(sys.argv) > 2:
 		print('USAGE: python3 youParse.py YOUTUBEurl')
