@@ -53,16 +53,17 @@ def main():
 			if flag in text:
 				msg = text.split(flag)[1]
 				args = msg.split()
-				func = commands.get(args[0])
-				if func:
-					arr = func(chan, args)
-					if arr:
-						if type(arr) is list or type(arr) is tuple:
-							for m in arr:
-								if m:
-									irc.send(chan, m)
-						else:
-							irc.send(chan, m)
+				if len(args) > 0:
+					func = commands.get(args[0])
+					if func:
+						arr = func(chan, args)
+						if arr:
+							if type(arr) is list or type(arr) is tuple:
+								for m in arr:
+									if m:
+										irc.send(chan, m)
+							else:
+								irc.send(chan, m)
 
 def quit(chan, args):
 	irc.disconnect()
@@ -72,7 +73,11 @@ def getPlaylist(chan, args):
 	global playlist
 	playlist = youParse.crawl(
 			"https://www.youtube.com/playlist?list=PL8fjrW04BOE7V9ZU3qXJ2nXF2uHkAUSeg")
-	return "Playlist Reloaded",
+	if playlist:
+		return "Playlist Reloaded",
+	else:
+		playlist = []
+		return "Playlist Error", 
 
 def chooseMusic(chan, args):
 	return random.choice(playlist),
