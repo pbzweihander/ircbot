@@ -41,7 +41,7 @@ cfd = []
 
 def main():
     global irc, doc, cfd
-    with open("SAO1.txt", 'r') as f:
+    with open("/home/pi/projects/python/ircbot/SAO1.txt", 'r') as f:
         while True:
             line = f.readline()
             if not line: break
