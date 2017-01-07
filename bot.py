@@ -58,12 +58,12 @@ def main():
         break
 
     #commands.update({"quit": quit})
+    commands.update({"join": join})
+    #commands.update({"part": part})
+    #commands.update({"command": cmd})
     commands.update({"음악목록갱신": get_playlist})
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
-    #commands.update({"join": join})
-    #commands.update({"part": part})
-    #commands.update({"command": cmd})
     commands.update({"옵": give_op})
     commands.update({"아무말": say_anything})
     get_playlist("", "", [])
@@ -79,16 +79,16 @@ def main():
             if 'INVITE ' in text:
                 irc.join(text.split(':', 2)[-1])
             print("[r] " + text)
-            if "PRIVMSG " in text:
+            if 'PRIVMSG ' in text:
                 chan = text.split("PRIVMSG ")[1].split()[0]
                 sender = text.split("!")[0][1:]
+                msg = text.split(":", 2)[2]
                 if "#" not in chan:
                     chan = sender
-                if text.split(":", 2)[-1][0] == flag:
-                    msg = text.split(flag, 2)[-1]
+                if msg[0] == flag:
                     args = msg.split()
                     if len(args) > 0:
-                        func = commands.get(args[0])
+                        func = commands.get(args[0][1:])
                         if func:
                             arr = func(chan, sender, args)
                             if arr:
@@ -98,6 +98,9 @@ def main():
                                             irc.send(chan, m)
                                 else:
                                     irc.send(chan, arr)
+                else:
+                    with open("/home/pi/projects/python/ircbot/log.txt", 'w') as f:
+                        f.write(msg + "\n")
 
 def quit(chan, sender, args):
     if sender in admins:
