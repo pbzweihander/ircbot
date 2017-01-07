@@ -1,2 +1,5 @@
 # Cached bytecodes
 /__pycache__/
+
+# 말뭉치
+*.txt

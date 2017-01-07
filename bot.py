@@ -25,7 +25,7 @@ import time
 channel = "#pbzweihander"
 server = "irc.uriirc.org"
 port = 16664
-nickname = "zweihander-bot"
+nickname = "zweihbot"
 
 flag = "\\"
 
@@ -35,11 +35,19 @@ playlist = []
 
 irc = []
 
-doc = kolaw.open('constitution.txt').read()
-cfd = calc_cfd(doc)
+#doc = kolaw.open('constitution.txt').read()
+doc = ""
+cfd = []
 
 def main():
-    global irc
+    global irc, doc, cfd
+    with open("SAO1.txt", 'r') as f:
+        while True:
+            line = f.readline()
+            if not line: break
+            doc += line
+    cfd = calc_cfd(doc)
+
     while True:
         try:
             irc = IRC()
@@ -49,31 +57,35 @@ def main():
             time.sleep(1)
         break
 
-    commands.update({"quit": quit})
+    #commands.update({"quit": quit})
     commands.update({"음악목록갱신": get_playlist})
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
-    commands.update({"join": join})
-    commands.update({"part": part})
-    commands.update({"command": cmd})
+    #commands.update({"join": join})
+    #commands.update({"part": part})
+    #commands.update({"command": cmd})
     commands.update({"옵": give_op})
     commands.update({"아무말": say_anything})
     get_playlist("", "", [])
 
-    while 1:
+    while True:
         lines = irc.get_text()
         
         for text in lines:
-            if text.find('PING') != -1:
+            if not text:
+                continue
+            if 'PING ' in text:
                 irc.raw_send('PONG ' + text.split()[1])
+            if 'INVITE ' in text:
+                irc.join(text.split(':', 2)[-1])
             print("[r] " + text)
             if "PRIVMSG " in text:
                 chan = text.split("PRIVMSG ")[1].split()[0]
                 sender = text.split("!")[0][1:]
                 if "#" not in chan:
                     chan = sender
-                if text.split(":", 2)[2][0] == flag:
-                    msg = text.split(flag, 2)[1]
+                if text.split(":", 2)[-1][0] == flag:
+                    msg = text.split(flag, 2)[-1]
                     args = msg.split()
                     if len(args) > 0:
                         func = commands.get(args[0])
@@ -150,7 +162,7 @@ def say_anything(chan, sender, args):
     if len(args) > 1:
         try:
             stc = generate_sentence(cfd, args[1])
-        except:
+        except ValueError:
             return "초기값이 잘못됐어요 ._."
         return stc
     else:
