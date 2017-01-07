@@ -4,7 +4,12 @@ zweihander-bot
 
 ```console
 # 음악 추천 기능
-\music
+\음악
+\선곡
+# channel operator 주기
+\옵 <닉네임1> <닉네임2> ...
+# 랜덤 문장 생성
+\아무말 <초기값>
 ```
 
 <br>
@@ -14,6 +19,8 @@ Getting Started
 
 ### prerequisites
 - Python ≥ *3.5*
+- KoNLPy (with MeCab)
+- NLTK
 
 ### Installation
 ```bash
