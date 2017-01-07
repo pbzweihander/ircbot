@@ -18,54 +18,54 @@ import socket
 import ssl
 
 def chunks(l, n):
-	for i in range(0, len(l), n):
-		yield l[i:i + n]
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
 class IRC:
-	def __init__(self):
-		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.irc = ssl.wrap_socket(sock)
+    def __init__(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.irc = ssl.wrap_socket(sock)
 
-	def send(self, chan, msg):
-		self.raw_send("PRIVMSG " + chan + " :" + msg)
+    def send(self, chan, msg):
+        self.raw_send("PRIVMSG " + chan + " :" + msg)
 
-	def raw_send(self, msg):
-		self.irc.send(bytes(msg + "\r\n", "UTF-8"))
-		print("[t] " + msg)
+    def raw_send(self, msg):
+        self.irc.send(bytes(msg + "\r\n", "UTF-8"))
+        print("[t] " + msg)
 
-	def connect(self, server, port : int, channel, botnick):
-		self.irc.connect((server, port))
-		self.raw_send("USER " + botnick + " 0 * :zweihander-bot")
-		self.raw_send("NICK " + botnick)
-		self.raw_send("JOIN " + channel)
+    def connect(self, server, port : int, channel, botnick):
+        self.irc.connect((server, port))
+        self.raw_send("USER " + botnick + " 0 * :zweihander-bot")
+        self.raw_send("NICK " + botnick)
+        self.raw_send("JOIN " + channel)
 
-	def disconnect(self):
-		self.raw_send("QUIT :bye!")
+    def disconnect(self):
+        self.raw_send("QUIT :bye!")
 
-	def join(self, channel):
-		self.raw_send("JOIN " + channel)
+    def join(self, channel):
+        self.raw_send("JOIN " + channel)
 
-	def part(self, channel):
-		self.raw_send("PART " + channel)
+    def part(self, channel):
+        self.raw_send("PART " + channel)
 
-	def get_text(self):
-		text = self.irc.recv(1024).decode("UTF-8")
-		lines = text.split("\n")
-		return lines
+    def get_text(self):
+        text = self.irc.recv(1024).decode("UTF-8")
+        lines = text.split("\n")
+        return lines
 
-	def op(self, chan, users):
-		if len(users) > 4:
-			uarr = chunk(users, 4)
-			for arr in uarr:
-				self.raw_send("MODE " + chan + " +" + ('o' * len(arr)) + " " + " ".join(arr))
-		else:
-			self.raw_send("MODE " + chan + " +" + ('o' * len(users)) + " " + " ".join(users))
-	
-	def deop(self, chan, users):
-		if len(users) > 4:
-			uarr = chunk(users, 4)
-			for arr in uarr:
-				self.raw_send("MODE " + chan + " -" + ('o' * len(arr)) + " " + " ".join(arr))
-		else:
-			self.raw_send("MODE " + chan +" -" + ('o' * len(users)) + " " + " ".join(users))
+    def op(self, chan, users):
+        if len(users) > 4:
+            uarr = chunk(users, 4)
+            for arr in uarr:
+                self.raw_send("MODE " + chan + " +" + ('o' * len(arr)) + " " + " ".join(arr))
+        else:
+            self.raw_send("MODE " + chan + " +" + ('o' * len(users)) + " " + " ".join(users))
+    
+    def deop(self, chan, users):
+        if len(users) > 4:
+            uarr = chunk(users, 4)
+            for arr in uarr:
+                self.raw_send("MODE " + chan + " -" + ('o' * len(arr)) + " " + " ".join(arr))
+        else:
+            self.raw_send("MODE " + chan +" -" + ('o' * len(users)) + " " + " ".join(users))
 

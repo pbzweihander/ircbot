@@ -37,112 +37,112 @@ irc = []
 
 
 def main():
-	global irc
-	while True:
-		try:
-			irc = IRC()
-			irc.connect(server, port, channel, nickname)
-		except:
-			print("retrying connection..")
-			time.sleep(1)
-		break
+    global irc
+    while True:
+        try:
+            irc = IRC()
+            irc.connect(server, port, channel, nickname)
+        except:
+            print("retrying connection..")
+            time.sleep(1)
+        break
 
-	commands.update({"quit": quit})
-	commands.update({"음악목록갱신": get_playlist})
-	commands.update({"선곡": choose_music})
-	commands.update({"음악": choose_music})
-	commands.update({"join": join})
-	commands.update({"part": part})
-	commands.update({"command": cmd})
-	commands.update({"옵": give_op})
-	get_playlist("", "", [])
+    commands.update({"quit": quit})
+    commands.update({"음악목록갱신": get_playlist})
+    commands.update({"선곡": choose_music})
+    commands.update({"음악": choose_music})
+    commands.update({"join": join})
+    commands.update({"part": part})
+    commands.update({"command": cmd})
+    commands.update({"옵": give_op})
+    get_playlist("", "", [])
 
-	while 1:
-		lines = irc.get_text()
-		
-		for text in lines:
-			if text.find('PING') != -1:
-				irc.raw_send('PONG ' + text.split()[1])
-			print("[r] " + text)
-			if "PRIVMSG " in text:
-				chan = text.split("PRIVMSG ")[1].split()[0]
-				sender = text.split("!")[0][1:]
-				if "#" not in chan:
-					chan = sender
-				if text.split(":", 2)[2][0] == flag:
-					msg = text.split(flag, 2)[1]
-					args = msg.split()
-					if len(args) > 0:
-						func = commands.get(args[0])
-						if func:
-							arr = func(chan, sender, args)
-							if arr:
-								if type(arr) is list or type(arr) is tuple:
-									for m in arr:
-										if m:
-											irc.send(chan, m)
-								else:
-									irc.send(chan, arr)
+    while 1:
+        lines = irc.get_text()
+        
+        for text in lines:
+            if text.find('PING') != -1:
+                irc.raw_send('PONG ' + text.split()[1])
+            print("[r] " + text)
+            if "PRIVMSG " in text:
+                chan = text.split("PRIVMSG ")[1].split()[0]
+                sender = text.split("!")[0][1:]
+                if "#" not in chan:
+                    chan = sender
+                if text.split(":", 2)[2][0] == flag:
+                    msg = text.split(flag, 2)[1]
+                    args = msg.split()
+                    if len(args) > 0:
+                        func = commands.get(args[0])
+                        if func:
+                            arr = func(chan, sender, args)
+                            if arr:
+                                if type(arr) is list or type(arr) is tuple:
+                                    for m in arr:
+                                        if m:
+                                            irc.send(chan, m)
+                                else:
+                                    irc.send(chan, arr)
 
 def quit(chan, sender, args):
-	if sender in admins:
-		irc.disconnect()
-		time.sleep(0.5)
-		sys.exit(0)
-	else:
-		return "접근 권한 거부 ._."
+    if sender in admins:
+        irc.disconnect()
+        time.sleep(0.5)
+        sys.exit(0)
+    else:
+        return "접근 권한 거부 ._."
 
 def get_playlist(chan, sender, args):
-	global playlist
-	playlist = youParse.crawl(
-			"https://www.youtube.com/playlist?list=PL8fjrW04BOE7V9ZU3qXJ2nXF2uHkAUSeg")
-	if playlist:
-		return "음악 목록 갱신 완료 ><",
-	else:
-		playlist = []
-		return "갱신중 에러 발생 ._.", 
+    global playlist
+    playlist = youParse.crawl(
+            "https://www.youtube.com/playlist?list=PL8fjrW04BOE7V9ZU3qXJ2nXF2uHkAUSeg")
+    if playlist:
+        return "음악 목록 갱신 완료 ><",
+    else:
+        playlist = []
+        return "갱신중 에러 발생 ._.", 
 
 def choose_music(chan, sender, args):
-	return random.choice(playlist),
+    return random.choice(playlist),
 
 def join(chan, sender, args):
-	global joined_channels
-	if sender in admins:
-		if len(args) > 1:
-			for c in args[1:]:
-				if "#" in c:
-					irc.join(c)
-					joined_channels.append(c)
-		else:
-			return "명령이 잘못됬어요 ._."
-	else:
-		return "접근 권한 거부 ._."
+    global joined_channels
+    if sender in admins:
+        if len(args) > 1:
+            for c in args[1:]:
+                if "#" in c:
+                    irc.join(c)
+                    joined_channels.append(c)
+        else:
+            return "명령이 잘못됬어요 ._."
+    else:
+        return "접근 권한 거부 ._."
 
 def part(chan, sender, args):
-	if sender in admins:
-		if len(args) > 1:
-			for c in args[1:]:
-				irc.part(c)
-				joined_channels.remove(c)
-		else:
-			irc.part(chan)
-			joined_channels.remove(c)
-	else:
-		return "접근 권한 거부 ._."
+    if sender in admins:
+        if len(args) > 1:
+            for c in args[1:]:
+                irc.part(c)
+                joined_channels.remove(c)
+        else:
+            irc.part(chan)
+            joined_channels.remove(c)
+    else:
+        return "접근 권한 거부 ._."
 
 def cmd(chan, sender, args):
-	if sender in admins:
-		msg = " ".join(args[1:]) + "\r\n"
-		irc.raw_send(msg)
-	else:
-		return "접근 권한 거부 ._."
+    if sender in admins:
+        msg = " ".join(args[1:]) + "\r\n"
+        irc.raw_send(msg)
+    else:
+        return "접근 권한 거부 ._."
 
 def give_op(chan, sender, args):
-	if len(args) > 1:
-		irc.op(chan, args[1:])
-		return "옵 나눠드렸어요 ><"
-	else:
-		return "명령이 잘못됬어요 ._."
+    if len(args) > 1:
+        irc.op(chan, args[1:])
+        return "옵 나눠드렸어요 ><"
+    else:
+        return "명령이 잘못됬어요 ._."
 
 main()
 
