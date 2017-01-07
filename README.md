@@ -24,6 +24,7 @@ Getting Started
 
 ### Installation
 ```bash
+vi bot.py #edit bot.py file to change server URL, port number and admin list
 vi zweihbot.service #edit .service file to fit your path
 sudo cp zweihbot.service /etc/systemd/system
 sudo systemctl daemon-reload

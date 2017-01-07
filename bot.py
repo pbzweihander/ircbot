@@ -30,7 +30,6 @@ nickname = "zweihander-bot"
 flag = "\\"
 
 admins = ["zweihander", "pbzweihander"]
-joined_channels = [channel]
 commands = {}
 playlist = []
 
@@ -114,9 +113,10 @@ def join(chan, sender, args):
     if sender in admins:
         if len(args) > 1:
             for c in args[1:]:
-                if "#" in c:
+                if c[0] == "#":
                     irc.join(c)
-                    joined_channels.append(c)
+                else:
+                    irc.join("#" + c)
         else:
             return "명령이 잘못됐어요 ._."
     else:
@@ -127,10 +127,8 @@ def part(chan, sender, args):
         if len(args) > 1:
             for c in args[1:]:
                 irc.part(c)
-                joined_channels.remove(c)
         else:
             irc.part(chan)
-            joined_channels.remove(c)
     else:
         return "접근 권한 거부 ._."
 
