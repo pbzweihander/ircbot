@@ -20,6 +20,7 @@ import sys
 import youParse
 import random
 import time
+import pickle
 
 #channel = "#snucse17"
 channel = "#pbzweihander"
@@ -36,17 +37,10 @@ playlist = []
 irc = []
 
 #doc = kolaw.open('constitution.txt').read()
-doc = ""
 cfd = []
 
 def main():
-    global irc, doc, cfd
-    with open("/home/pi/projects/python/ircbot/SAO1.txt", 'r') as f:
-        while True:
-            line = f.readline()
-            if not line: break
-            doc += line
-    cfd = calc_cfd(doc)
+    global irc
 
     while True:
         try:
@@ -62,11 +56,13 @@ def main():
     #commands.update({"part": part})
     #commands.update({"command": cmd})
     commands.update({"음악목록갱신": get_playlist})
+    commands.update({"말뭉치갱신": get_cfd})
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
     commands.update({"옵": give_op})
     commands.update({"아무말": say_anything})
     get_playlist("", "", [])
+    get_cfd("", "", [])
 
     while True:
         lines = irc.get_text()
@@ -120,6 +116,15 @@ def get_playlist(chan, sender, args):
         playlist = []
         return "갱신 중 에러 발생 ._.", 
 
+def get_cfd(chan, sender, args):
+    global cfd
+    with open("cfd.pkl", 'rb') as f:
+        cfd = pickle.load(f)
+    if cfd:
+        return "말뭉치가 갱신됐어요 ><",
+    else:
+        return "갱신 중 에러 발생 ._.",
+
 def choose_music(chan, sender, args):
     return random.choice(playlist),
 
@@ -162,6 +167,8 @@ def give_op(chan, sender, args):
         return "명령이 잘못됐어요 ._."
 
 def say_anything(chan, sender, args):
+    if not cfd:
+        return "말뭉치 오류 ._."
     if len(args) > 1:
         try:
             stc = generate_sentence(cfd, args[1])
