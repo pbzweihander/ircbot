@@ -24,6 +24,7 @@ Getting Started
 
 ### Installation
 ```bash
+vi zweihbot.service #edit .service file to fit your path
 sudo cp zweihbot.service /etc/systemd/system
 sudo systemctl daemon-reload
 
