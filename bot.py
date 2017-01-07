@@ -118,7 +118,7 @@ def get_playlist(chan, sender, args):
 
 def get_cfd(chan, sender, args):
     global cfd
-    with open("cfd.pkl", 'rb') as f:
+    with open("/home/pi/projects/python/ircbot/cfd.pkl", 'rb') as f:
         cfd = pickle.load(f)
     if cfd:
         return "말뭉치가 갱신됐어요 ><",
