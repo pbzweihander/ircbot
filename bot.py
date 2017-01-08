@@ -94,9 +94,9 @@ def main():
                                             irc.send(chan, m)
                                 else:
                                     irc.send(chan, arr)
-                else:
-                    with open("/home/pi/projects/python/ircbot/log.txt", 'w') as f:
-                        f.write(msg + "\n")
+                #else:
+                #    with open("/home/pi/projects/python/ircbot/log.txt", 'w') as f:
+                #        f.write(msg + "\n")
 
 def quit(chan, sender, args):
     if sender in admins:
