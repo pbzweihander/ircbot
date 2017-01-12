@@ -49,7 +49,7 @@ class IRC:
         self.raw_send("PART " + channel)
 
     def get_text(self):
-        text = self.irc.recv(1024).decode("UTF-8")
+        text = self.irc.recv(1024).decode("UTF-8", "ignore")
         lines = text.split("\n")
         return lines
 
