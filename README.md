@@ -29,8 +29,8 @@ vi zweihbot.service #edit .service file to fit your path
 sudo cp zweihbot.service /etc/systemd/system
 sudo systemctl daemon-reload
 
-sudo systemctl enable hyeonbot
-sudo systemctl start hyeonbot
+sudo systemctl enable zweihbot
+sudo systemctl start zweihbot
 ```
 
 <br>
