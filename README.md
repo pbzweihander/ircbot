@@ -19,8 +19,8 @@ Getting Started
 
 ### prerequisites
 - Python ≥ *3.5*
-- KoNLPy (with MeCab)
-- NLTK
+- [KoNLPy](https://github.com/konlpy/konlpy) (with MeCab)
+- [NLTK](http://www.nltk.org/)
 
 ### Installation
 ```bash
