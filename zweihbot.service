@@ -20,8 +20,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=pi
-ExecStart=/usr/bin/python3 /home/pi/projects/python/ircbot/bot.py
+User=thomas
+ExecStart=/usr/bin/python3 /home/thomas/projects/python/ircbot/bot.py
 
 [Install]
 WantedBy=multi-user.target
