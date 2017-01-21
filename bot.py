@@ -66,7 +66,7 @@ def main():
 
     while True:
         lines = irc.get_text()
-        
+
         for text in lines:
             if not text:
                 continue
@@ -88,12 +88,9 @@ def main():
                         if func:
                             arr = func(chan, sender, args)
                             if arr:
-                                if type(arr) is list or type(arr) is tuple:
-                                    for m in arr:
-                                        if m:
-                                            irc.send(chan, m)
-                                else:
-                                    irc.send(chan, arr)
+                                for m in arr:
+                                    if m:
+                                        irc.send(chan, m)
                 #else:
                 #    with open("/home/pi/projects/python/ircbot/log.txt", 'w') as f:
                 #        f.write(msg + "\n")
@@ -104,7 +101,7 @@ def quit(chan, sender, args):
         time.sleep(0.5)
         sys.exit(0)
     else:
-        return "접근 권한 거부 ._."
+        return "접근 권한 거부 ._.",
 
 def get_playlist(chan, sender, args):
     global playlist
@@ -114,7 +111,7 @@ def get_playlist(chan, sender, args):
         return "음악 목록이 갱신됐어요 ><",
     else:
         playlist = []
-        return "갱신 중 에러 발생 ._.", 
+        return "갱신 중 에러 발생 ._.",
 
 def get_cfd(chan, sender, args):
     global cfd
@@ -138,9 +135,9 @@ def join(chan, sender, args):
                 else:
                     irc.join("#" + c)
         else:
-            return "명령이 잘못됐어요 ._."
+            return "명령이 잘못됐어요 ._.",
     else:
-        return "접근 권한 거부 ._."
+        return "접근 권한 거부 ._.",
 
 def part(chan, sender, args):
     if sender in admins:
@@ -150,33 +147,33 @@ def part(chan, sender, args):
         else:
             irc.part(chan)
     else:
-        return "접근 권한 거부 ._."
+        return "접근 권한 거부 ._.",
 
 def cmd(chan, sender, args):
     if sender in admins:
         msg = " ".join(args[1:]) + "\r\n"
         irc.raw_send(msg)
     else:
-        return "접근 권한 거부 ._."
+        return "접근 권한 거부 ._.",
 
 def give_op(chan, sender, args):
     if len(args) > 1:
         irc.op(chan, args[1:])
-        return "옵 나눠드렸어요 ><"
+        return "옵 나눠드렸어요 ><",
     else:
-        return "명령이 잘못됐어요 ._."
+        return "명령이 잘못됐어요 ._.",
 
 def say_anything(chan, sender, args):
     if not cfd:
-        return "말뭉치 오류 ._."
+        return "말뭉치 오류 ._.",
     if len(args) > 1:
         try:
             stc = generate_sentence(cfd, args[1])
         except ValueError:
-            return "초기값이 잘못됐어요 ._."
+            return "초기값이 잘못됐어요 ._.",
         return stc
     else:
-        return "명령이 잘못됐어요 ._."
+        return "명령이 잘못됐어요 ._.",
 
 
 main()
