@@ -171,7 +171,7 @@ def say_anything(chan, sender, args):
             stc = generate_sentence(cfd, args[1])
         except ValueError:
             return "초기값이 잘못됐어요 ._.",
-        return stc
+        return stc,
     else:
         return "명령이 잘못됐어요 ._.",
 
