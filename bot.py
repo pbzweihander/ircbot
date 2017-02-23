@@ -127,7 +127,7 @@ def disconnect(chan, sender, args):  # 퇴장
 def get_beerlist(chan, sender, args):  # 맥주 목록 갱신
     global beers
     beers = []
-    with open('beers.list', 'r') as f:
+    with open('/home/thomas/projects/python/ircbot/beers.list', 'r') as f:
         lines = f.readlines()
         for line in lines:
             name = line.split(';')[0]
