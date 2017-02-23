@@ -5,5 +5,8 @@
 *.txt
 *.pkl
 
+# 맥주목록
+beers.list
+
 # Pycharm
 /.idea/
