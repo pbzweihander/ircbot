@@ -4,12 +4,14 @@ zweihander-bot
 
 ```console
 # 음악 추천 기능
-\음악
-\선곡
+>음악
+>선곡
+# 맥주 추천 기능
+>맥주
 # channel operator 주기
-\옵 <닉네임1> <닉네임2> ...
+>옵 <닉네임1> <닉네임2> ...
 # 랜덤 문장 생성
-\아무말 <초기값>
+>아무말 <초기값>
 ```
 
 <br>
@@ -24,8 +26,11 @@ Getting Started
 
 ### Installation
 ```bash
-vi bot.py #edit bot.py file to change server URL, port number and admin list
-vi zweihbot.service #edit .service file to fit your path
+vim bot.py
+    # edit bot.py file to change server URL, port number, admin list,
+    # and directory path
+vim zweihbot.service
+    # edit .service file to fit your path
 sudo cp zweihbot.service /etc/systemd/system
 sudo systemctl daemon-reload
 
