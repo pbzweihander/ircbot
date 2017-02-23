@@ -1,4 +1,4 @@
-# Name: irc.py
+# Name: bot.py
 # Author: pbzweihander
 # Email: sd852456@naver.com
 #
@@ -38,18 +38,21 @@ irc = IRC()
 cfd = []
 
 chimes = {  # 맞장구 커맨드 리스트
-    '><': (' ><',),
-    '아': ('ㄺ',),
-    '오': ('ㄺ',),
-    '(!)': ('(¡)',),
-    'ㅜㅜ': ('ㅅㅅ', 'ㅡㅡ방'),
+    '아': 'ㄺ',
+    '(!)': '(¡)',
+    'ㅜㅜ': '스스방',
+    'ㅉ': 'ㅡ방',
+    'ㅈㅈ': 'ㅡㅡ방',
+    '^^/': '^^7',
+    '._.': 'ㅠ_ㅠ',
+    '><': '>ㅅ<',
 }
 
 beers = []  # 맥주 목록
 
 
 def main():
-    global irc
+    global irc, chimes
 
     while True:
         try:
@@ -70,6 +73,7 @@ def main():
     commands.update({"말뭉치갱신": get_cfd})
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
+    commands.update({"맥주": choose_beer})
     commands.update({"옵": give_op})
     commands.update({"아무말": say_anything})
     get_playlist("", "", [])
@@ -99,9 +103,8 @@ def main():
                 if "#" not in chan:  # 채널 메세지가 아니라 쿼리(귓속말)
                     chan = sender
 
-                if chimes.get(text):  # 말장구 넣기
-                    for m in chimes.get(msg):
-                        irc.send(chan, m)
+                if msg.strip() in chimes:  # 말장구 넣기
+                    irc.send(chan, chimes.get(msg.strip()))
 
                 if msg[0] == flag:  # 메세지 처리
                     args = msg.split()
