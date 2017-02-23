@@ -22,7 +22,6 @@ import random
 import time
 import pickle
 
-#channel = "#snucse17"
 channel = "#pbzweihander"
 server = "irc.uriirc.org"
 port = 16664
@@ -34,27 +33,28 @@ admins = ["zweihander", "pbzweihander"]
 commands = {}
 playlist = []
 
-irc = []
+irc = IRC()
 
-#doc = kolaw.open('constitution.txt').read()
 cfd = []
+
 
 def main():
     global irc
 
     while True:
         try:
-            irc = IRC()
+            irc.init()
             irc.connect(server, port, channel, nickname)
         except:
             print("retrying connection..")
             time.sleep(1)
         break
 
-    #commands.update({"quit": quit})
+    # 명령어 등록
+    # commands.update({"disconnect": disconnect})
+    # commands.update({"part": part})
+    # commands.update({"command": cmd})
     commands.update({"join": join})
-    #commands.update({"part": part})
-    #commands.update({"command": cmd})
     commands.update({"음악목록갱신": get_playlist})
     commands.update({"말뭉치갱신": get_cfd})
     commands.update({"선곡": choose_music})
@@ -64,24 +64,24 @@ def main():
     get_playlist("", "", [])
     get_cfd("", "", [])
 
-    while True:
-        lines = irc.get_text()
+    while True:  # 메세지 받는 루프
+        lines = irc.get_text()  # 받아온다
 
         for text in lines:
             if not text:
                 continue
-            if 'PING ' in text:
+            if 'PING ' in text:  # 서버에서 핑 요청시 응답
                 irc.raw_send('PONG ' + text.split()[1])
-            if 'INVITE ' in text:
+            if 'INVITE ' in text:  # 유저가 채널로 초대시 응답
                 irc.join(text.split(':', 2)[-1])
-            print("[r] " + text)
-            if 'PRIVMSG ' in text:
+            print("[r] " + text)  # 로그
+            if 'PRIVMSG ' in text:  # 메세지
                 chan = text.split("PRIVMSG ")[1].split()[0]
                 sender = text.split("!")[0][1:]
                 msg = text.split(":", 2)[2]
-                if "#" not in chan:
+                if "#" not in chan:  # 채널 메세지가 아니라 쿼리(귓속말)
                     chan = sender
-                if msg[0] == flag:
+                if msg[0] == flag:  # 메세지 처리
                     args = msg.split()
                     if len(args) > 0:
                         func = commands.get(args[0][1:])
@@ -91,11 +91,9 @@ def main():
                                 for m in arr:
                                     if m:
                                         irc.send(chan, m)
-                #else:
-                #    with open("/home/pi/projects/python/ircbot/log.txt", 'w') as f:
-                #        f.write(msg + "\n")
 
-def quit(chan, sender, args):
+
+def disconnect(chan, sender, args):  # 퇴장
     if sender in admins:
         irc.disconnect()
         time.sleep(0.5)
@@ -103,17 +101,19 @@ def quit(chan, sender, args):
     else:
         return "접근 권한 거부 ._.",
 
-def get_playlist(chan, sender, args):
+
+def get_playlist(chan, sender, args):  # 유투브 플레이리스트를 받아와 파싱해서 음악 목록을 얻어온다
     global playlist
     playlist = youParse.crawl(
-            "https://www.youtube.com/playlist?list=PL8fjrW04BOE7V9ZU3qXJ2nXF2uHkAUSeg")
+        "https://www.youtube.com/playlist?list=PL8fjrW04BOE7V9ZU3qXJ2nXF2uHkAUSeg")
     if playlist:
         return "음악 목록이 갱신됐어요 ><",
     else:
         playlist = []
         return "갱신 중 에러 발생 ._.",
 
-def get_cfd(chan, sender, args):
+
+def get_cfd(chan, sender, args):  # 미리 저장된 CFD를 받아와 말뭉치를 갱신한다
     global cfd
     with open("/home/thomas/projects/python/ircbot/cfd.pkl", 'rb') as f:
         cfd = pickle.load(f)
@@ -122,11 +122,12 @@ def get_cfd(chan, sender, args):
     else:
         return "갱신 중 에러 발생 ._.",
 
-def choose_music(chan, sender, args):
+
+def choose_music(chan, sender, args):  # 선곡
     return random.choice(playlist),
 
-def join(chan, sender, args):
-    global joined_channels
+
+def join(chan, sender, args):  # 채널 입장
     if sender in admins:
         if len(args) > 1:
             for c in args[1:]:
@@ -139,7 +140,8 @@ def join(chan, sender, args):
     else:
         return "접근 권한 거부 ._.",
 
-def part(chan, sender, args):
+
+def part(chan, sender, args):  # 채널 나가기
     if sender in admins:
         if len(args) > 1:
             for c in args[1:]:
@@ -149,21 +151,24 @@ def part(chan, sender, args):
     else:
         return "접근 권한 거부 ._.",
 
-def cmd(chan, sender, args):
+
+def cmd(chan, sender, args):  # RAW 명령어 보내기
     if sender in admins:
         msg = " ".join(args[1:]) + "\r\n"
         irc.raw_send(msg)
     else:
         return "접근 권한 거부 ._.",
 
-def give_op(chan, sender, args):
+
+def give_op(chan, sender, args):  # 옵 주기
     if len(args) > 1:
         irc.op(chan, args[1:])
         return "옵 나눠드렸어요 ><",
     else:
         return "명령이 잘못됐어요 ._.",
 
-def say_anything(chan, sender, args):
+
+def say_anything(chan, sender, args):  # 아무말 생성
     if not cfd:
         return "말뭉치 오류 ._.",
     if len(args) > 1:
@@ -177,4 +182,3 @@ def say_anything(chan, sender, args):
 
 
 main()
-

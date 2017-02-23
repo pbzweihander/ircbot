@@ -17,12 +17,16 @@
 import socket
 import ssl
 
+
 def chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
+
 class IRC:
-    def __init__(self):
+    irc = []
+
+    def init(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.irc = ssl.wrap_socket(sock)
 
@@ -33,7 +37,7 @@ class IRC:
         self.irc.send(bytes(msg + "\r\n", "UTF-8"))
         print("[t] " + msg)
 
-    def connect(self, server, port : int, channel, botnick):
+    def connect(self, server, port: int, channel, botnick):
         self.irc.connect((server, port))
         self.raw_send("USER " + botnick + " 0 * :zweihander-bot")
         self.raw_send("NICK " + botnick)
@@ -60,12 +64,11 @@ class IRC:
                 self.raw_send("MODE " + chan + " +" + ('o' * len(arr)) + " " + " ".join(arr))
         else:
             self.raw_send("MODE " + chan + " +" + ('o' * len(users)) + " " + " ".join(users))
-    
+
     def deop(self, chan, users):
         if len(users) > 4:
             uarr = chunk(users, 4)
             for arr in uarr:
                 self.raw_send("MODE " + chan + " -" + ('o' * len(arr)) + " " + " ".join(arr))
         else:
-            self.raw_send("MODE " + chan +" -" + ('o' * len(users)) + " " + " ".join(users))
-
+            self.raw_send("MODE " + chan + " -" + ('o' * len(users)) + " " + " ".join(users))

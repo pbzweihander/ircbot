@@ -4,3 +4,6 @@
 # 말뭉치
 *.txt
 *.pkl
+
+# Pycharm
+/.idea/
