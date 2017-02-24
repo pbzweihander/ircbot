@@ -45,6 +45,7 @@ chimes = {  # 맞장구 커맨드 리스트
     'ㅈㅈ': 'ㅡㅡ방',
     '^^/': '^^7',
     '><': '>ㅅ<',
+    '>ㅅ<': '><',
     'ㅇㅅㅎ': '       슈퍼 드라이',
     'ㅎㅅㅇ': 'ㅇㅅㅎ',
     'ㅇㅅㅁ': 'ㅁㅅㅇ',
@@ -57,7 +58,7 @@ chimes = {  # 맞장구 커맨드 리스트
 }
 
 beers = []  # 맥주 목록
-
+weekends = []   # 주말에 할 일 목록
 
 def main():
     global irc, chimes
@@ -78,14 +79,17 @@ def main():
     commands.update({"join": join})
     commands.update({"음악목록갱신": get_playlist})
     commands.update({"맥주목록갱신": get_beerlist})
+    commands.update({"주말목록갱신": get_weekendlist})
     commands.update({"말뭉치갱신": get_cfd})
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
     commands.update({"맥주": choose_beer})
+    commands.update({"주말": choose_weekend})
     commands.update({"옵": give_op})
     commands.update({"아무말": say_anything})
     get_playlist("", "", [])
     get_beerlist("", "", [])
+    get_weekendlist("", "", [])
     get_cfd("", "", [])
 
     while True:  # 메세지 받는 루프
@@ -141,15 +145,28 @@ def get_beerlist(chan, sender, args):  # 맥주 목록 갱신
     with open('/home/thomas/projects/python/ircbot/beers.list', 'r') as f:
         lines = f.readlines()
         for line in lines:
-            name = line.split(';')[0]
-            multiflier = int(line.split(';')[1])
-            for i in range(0, multiflier):
-                beers.append(name)
+            if line:
+                beers.append(line.strip())
     return "맥주 목록이 갱신됐어요 ><",
 
 
 def choose_beer(chan, sender, args):
     return "당신을 위한 맥주 : %s" % random.choice(beers),
+
+
+def get_weekendlist(chan, sender, args):
+    global weekends
+    weekends = []
+    with open('/home/thomas/projects/python/ircbot/weekend.list', 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            if line:
+                weekends.append(line.strip())
+    return "주말 계획 목록이 갱신됐어요 ><",
+
+
+def choose_weekend(chan, sender, args):
+    return "당신을 위한 주말 : %s" % random.choice(weekends),
 
 
 def get_playlist(chan, sender, args):  # 유투브 플레이리스트를 받아와 파싱해서 음악 목록을 얻어온다
