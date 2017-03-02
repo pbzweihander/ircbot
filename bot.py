@@ -183,7 +183,7 @@ def get_chimelist(chan, sender, args):
                 before = line.split(':')[0].strip()
                 after = line.split(':')[1].strip()
                 chimes.update({before: after})
-    return '말장구 목록이 갱신됐어요 ><',
+    return '맞장구 목록이 갱신됐어요 ><',
 
 def choose_music(chan, sender, args):  # 선곡
     return random.choice(playlist),
