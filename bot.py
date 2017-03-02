@@ -37,26 +37,7 @@ irc = IRC()
 
 cfd = []
 
-chimes = {  # 맞장구 커맨드 리스트
-    '아': 'ㄺ',
-    '(!)': '(¡)',
-    'ㅉ': 'ㅡ방',
-    'ㅈㅈ': 'ㅡㅡ방',
-    '^^/': '^^7',
-    '^^)/': '\(^^',
-    '\(^^': '^^)/',
-    '><': '>ㅅ<',
-    '>ㅅ<': '><',
-    'ㅇㅅㅎ': '       슈퍼 드라이',
-    'ㅎㅅㅇ': 'ㅇㅅㅎ',
-    'ㅇㅅㅁ': 'ㅁㅅㅇ',
-    'ㅁㅅㅇ': 'ㅇㅅㅁ',
-    'ㅁㅅㅎ': 'ㅎㅅㅁ',
-    'ㅎㅅㅁ': 'ㅁㅅㅎ',
-    'ㅇㅅㅇ': 'ㅎㅅㅎ',
-    'ㅎㅅㅎ': 'ㅁㅅㅁ',
-    'ㅁㅅㅁ': 'ㅇㅅㅇ',
-}
+chimes = {}  # 맞장구 커맨드 리스트
 
 beers = []  # 맥주 목록
 weekends = []   # 주말에 할 일 목록
@@ -82,6 +63,7 @@ def main():
     commands.update({"맥주목록갱신": get_beerlist})
     commands.update({"주말목록갱신": get_weekendlist})
     commands.update({"말뭉치갱신": get_cfd})
+    commands.update({"맞장구갱신": get_chimelist})
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
     commands.update({"맥주": choose_beer})
@@ -92,6 +74,7 @@ def main():
     get_beerlist("", "", [])
     get_weekendlist("", "", [])
     get_cfd("", "", [])
+    get_chimelist("", "", [])
 
     while True:  # 메세지 받는 루프
         lines = irc.get_text()  # 받아온다
@@ -190,6 +173,17 @@ def get_cfd(chan, sender, args):  # 미리 저장된 CFD를 받아와 말뭉치�
     else:
         return "갱신 중 에러 발생 ._.",
 
+
+def get_chimelist(chan, sender, args):
+    global chimes
+    with open("/home/thomas/projects/python/ircbot/chime.list", 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            if line:
+                before = line.split(':')[0].strip()
+                after = line.split(':')[1].strip()
+                chimes.update({before: after})
+    return '말장구 목록이 갱신됐어요 ><',
 
 def choose_music(chan, sender, args):  # 선곡
     return random.choice(playlist),
