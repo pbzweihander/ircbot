@@ -40,7 +40,9 @@ cfd = []
 chimes = {}  # 맞장구 커맨드 리스트
 
 beers = []  # 맥주 목록
+last_beers = [] # 중복 방지용 목록
 weekends = []   # 주말에 할 일 목록
+last_weekends = []  # 중복 방지용
 
 def main():
     global irc, chimes
@@ -67,6 +69,8 @@ def main():
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
     commands.update({"맥주": choose_beer})
+    commands.update({"맥쥬": choose_beer})
+    commands.update({"액체": choose_beer})
     commands.update({"주말": choose_weekend})
     commands.update({"옵": give_op})
     commands.update({"아무말": say_anything})
@@ -135,7 +139,15 @@ def get_beerlist(chan, sender, args):  # 맥주 목록 갱신
 
 
 def choose_beer(chan, sender, args):
-    return "당신을 위한 맥주 : %s" % random.choice(beers),
+    global last_beers
+    while True:
+        b = random.choice(beers)
+        if b not in last_beers:
+            last_beers.append(b)
+            if len(last_beers) > 5:
+                last_beers = last_beers[1:]
+            break
+    return "당신을 위한 맥주 : %s" % b,
 
 
 def get_weekendlist(chan, sender, args):
@@ -150,7 +162,15 @@ def get_weekendlist(chan, sender, args):
 
 
 def choose_weekend(chan, sender, args):
-    return "당신을 위한 주말 : %s" % random.choice(weekends),
+    global last_weekends
+    while True:
+        w = random.choice(weekends)
+        if w not in last_weekends:
+            last_weekends.append(w)
+            if len(last_weekends) > 5:
+                last_weekends = last_weekends[1:]
+            break
+    return "당신을 위한 주말 : %s" % w,
 
 
 def get_playlist(chan, sender, args):  # 유투브 플레이리스트를 받아와 파싱해서 음악 목록을 얻어온다
