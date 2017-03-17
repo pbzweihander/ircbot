@@ -43,6 +43,9 @@ beers = []  # 맥주 목록
 last_beers = [] # 중복 방지용 목록
 weekends = []   # 주말에 할 일 목록
 last_weekends = []  # 중복 방지용
+restaurants = []
+last_restaurant = ""
+
 
 def main():
     global irc, chimes
@@ -66,12 +69,15 @@ def main():
     commands.update({"주말목록갱신": get_weekendlist})
     commands.update({"말뭉치갱신": get_cfd})
     commands.update({"맞장구갱신": get_chimelist})
+    commands.update({"식당목록갱신": get_restaurantlist})
     commands.update({"선곡": choose_music})
     commands.update({"음악": choose_music})
     commands.update({"맥주": choose_beer})
     commands.update({"맥쥬": choose_beer})
     commands.update({"액체": choose_beer})
     commands.update({"주말": choose_weekend})
+    commands.update({"점심": choose_lunch})
+    commands.update({"저녁": choose_dinner})
     commands.update({"옵": give_op})
     commands.update({"아무말": say_anything})
     get_playlist("", "", [])
@@ -79,6 +85,7 @@ def main():
     get_weekendlist("", "", [])
     get_cfd("", "", [])
     get_chimelist("", "", [])
+    get_restaurantlist("", "", [])
 
     while True:  # 메세지 받는 루프
         lines = irc.get_text()  # 받아온다
@@ -205,8 +212,40 @@ def get_chimelist(chan, sender, args):
                 chimes.update({before: after})
     return '맞장구 목록이 갱신됐어요 ><',
 
+
 def choose_music(chan, sender, args):  # 선곡
     return random.choice(playlist),
+
+
+def get_restaurantlist(chan, sender, args):
+    global restaurants
+    restaurants = []
+    with open('/home/thomas/projects/python/ircbot/restaurant.list', 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            if line:
+                restaurants.append(line.strip())
+    return "맥주 목록이 갱신됐어요 ><",
+
+
+def choose_lunch(chan, sender, args):
+    global last_restaurant
+    while True:
+        r = random.choice(restaurants)
+        if r != last_restaurant:
+            last_restaurant = r
+            break
+    return "!식단 점심 %s" % r,
+
+
+def choose_dinner(chan, sender, args):
+    global last_restaurant
+    while True:
+        r = random.choice(restaurants)
+        if r != last_restaurant:
+            last_restaurant = r
+            break
+    return "!식단 저녁 %s" % r,
 
 
 def join(chan, sender, args):  # 채널 입장
