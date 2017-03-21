@@ -225,7 +225,7 @@ def get_restaurantlist(chan, sender, args):
         for line in lines:
             if line:
                 restaurants.append(line.strip())
-    return "맥주 목록이 갱신됐어요 ><",
+    return "식당 목록이 갱신됐어요 ><",
 
 
 def choose_lunch(chan, sender, args):
