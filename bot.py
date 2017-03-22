@@ -15,12 +15,12 @@
 # GNU Affero General Public License for more details.
 
 from irc import *
-from sentence_generator import *
+# from sentence_generator import *
 import sys
 import youParse
 import random
 import time
-import pickle
+# import pickle
 
 channel = "#pbzweihander"
 server = "irc.uriirc.org"
@@ -35,7 +35,7 @@ playlist = []
 
 irc = IRC()
 
-cfd = []
+# cfd = []
 
 chimes = {}  # 맞장구 커맨드 리스트
 
@@ -67,7 +67,7 @@ def main():
     commands.update({"음악목록갱신": get_playlist})
     commands.update({"맥주목록갱신": get_beerlist})
     commands.update({"주말목록갱신": get_weekendlist})
-    commands.update({"말뭉치갱신": get_cfd})
+    # commands.update({"말뭉치갱신": get_cfd})
     commands.update({"맞장구갱신": get_chimelist})
     commands.update({"식당목록갱신": get_restaurantlist})
     commands.update({"선곡": choose_music})
@@ -79,11 +79,11 @@ def main():
     commands.update({"점심": choose_lunch})
     commands.update({"저녁": choose_dinner})
     commands.update({"옵": give_op})
-    commands.update({"아무말": say_anything})
+    # commands.update({"아무말": say_anything})
     get_playlist("", "", [])
     get_beerlist("", "", [])
     get_weekendlist("", "", [])
-    get_cfd("", "", [])
+    # get_cfd("", "", [])
     get_chimelist("", "", [])
     get_restaurantlist("", "", [])
 
@@ -137,7 +137,7 @@ def disconnect(chan, sender, args):  # 퇴장
 def get_beerlist(chan, sender, args):  # 맥주 목록 갱신
     global beers
     beers = []
-    with open('/home/thomas/projects/python/ircbot/beers.list', 'r') as f:
+    with open('beers.list', 'r') as f:
         lines = f.readlines()
         for line in lines:
             if line:
@@ -160,7 +160,7 @@ def choose_beer(chan, sender, args):
 def get_weekendlist(chan, sender, args):
     global weekends
     weekends = []
-    with open('/home/thomas/projects/python/ircbot/weekend.list', 'r') as f:
+    with open('weekend.list', 'r') as f:
         lines = f.readlines()
         for line in lines:
             if line:
@@ -193,7 +193,7 @@ def get_playlist(chan, sender, args):  # 유투브 플레이리스트를 받아�
 
 def get_cfd(chan, sender, args):  # 미리 저장된 CFD를 받아와 말뭉치를 갱신한다
     global cfd
-    with open("/home/thomas/projects/python/ircbot/cfd.pkl", 'rb') as f:
+    with open("cfd.pkl", 'rb') as f:
         cfd = pickle.load(f)
     if cfd:
         return "말뭉치가 갱신됐어요 ><",
@@ -203,7 +203,7 @@ def get_cfd(chan, sender, args):  # 미리 저장된 CFD를 받아와 말뭉치�
 
 def get_chimelist(chan, sender, args):
     global chimes
-    with open("/home/thomas/projects/python/ircbot/chime.list", 'r') as f:
+    with open("chime.list", 'r') as f:
         lines = f.readlines()
         for line in lines:
             if line:
@@ -220,7 +220,7 @@ def choose_music(chan, sender, args):  # 선곡
 def get_restaurantlist(chan, sender, args):
     global restaurants
     restaurants = []
-    with open('/home/thomas/projects/python/ircbot/restaurant.list', 'r') as f:
+    with open('restaurant.list', 'r') as f:
         lines = f.readlines()
         for line in lines:
             if line:
